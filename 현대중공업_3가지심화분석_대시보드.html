@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현대중공업 (009540) 3가지 심화분석</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-graham: #ff6600;
+            --color-buffett: #0066cc;
+            --color-munger: #0099ff;
+            --color-sell: #ff0000;
+            --color-hold: #ffaa00;
+            --color-buy: #66ff00;
+            --color-strong-buy: #00cc00;
+            --color-dark: #0a0a0a;
+            --color-darker: #000000;
+            --color-light: #ffffff;
+            --color-gray: #5a5a5f;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'D-DIN', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--color-darker) 0%, var(--color-dark) 100%);
+            color: var(--color-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .company-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .company-meta {
+            font-size: 12px;
+            color: var(--color-gray);
+            margin-top: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .signal-badge {
+            background: var(--color-sell);
+            color: var(--color-light);
+            padding: 0.8rem 1.6rem;
+            border-radius: 32px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.8); }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        /* Three Perspective Section */
+        .perspectives {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .perspective-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 2rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .perspective-card:hover {
+            transform: translateY(-8px);
+            backdrop-filter: blur(20px);
+        }
+
+        .perspective-card.graham { border-color: var(--color-graham); }
+        .perspective-card.buffett { border-color: var(--color-buffett); }
+        .perspective-card.munger { border-color: var(--color-munger); }
+
+        .perspective-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--color-light), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .perspective-card:hover::before {
+            opacity: 1;
+        }
+
+        .perspective-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .perspective-icon {
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .perspective-name {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .perspective-subtitle {
+            font-size: 11px;
+            color: var(--color-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .score-display {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 1.5rem 0;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-gray);
+            margin-bottom: 1rem;
+        }
+
+        .signal-label {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .signal-sell { background: var(--color-sell); color: white; }
+        .signal-hold { background: var(--color-hold); color: black; }
+        .signal-buy { background: var(--color-buy); color: black; }
+
+        /* Summary Box */
+        .summary-box {
+            background: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid var(--color-sell);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 4rem;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .summary-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-gray);
+            margin-bottom: 0.8rem;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-status {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .status-fail { background: rgba(255, 0, 0, 0.3); color: #ff6666; }
+        .status-warn { background: rgba(255, 170, 0, 0.3); color: #ffbb33; }
+        .status-pass { background: rgba(0, 204, 0, 0.3); color: #66ff00; }
+
+        /* Detailed Analysis */
+        .analysis-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .analysis-table th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.8px;
+        }
+
+        .analysis-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .analysis-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            color: var(--color-gray);
+        }
+
+        .tab:hover {
+            color: var(--color-light);
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab.active {
+            color: var(--color-light);
+            border-bottom-color: var(--color-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Score Chart */
+        .score-chart {
+            margin: 2rem 0;
+        }
+
+        .chart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-label {
+            width: 120px;
+            text-align: right;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .chart-bar {
+            flex: 1;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-graham), var(--color-buffett), var(--color-munger));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--color-gray);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .company-name {
+                font-size: 18px;
+            }
+
+            .perspectives {
+                grid-template-columns: 1fr;
+            }
+
+            .perspective-card {
+                padding: 1.5rem;
+            }
+
+            .score-display {
+                font-size: 48px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .analysis-table {
+                font-size: 12px;
+            }
+
+            .analysis-table th,
+            .analysis-table td {
+                padding: 0.8rem;
+            }
+
+            .tabs {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+        }
+
+        /* Utilities */
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .p-2 { padding: 2rem; }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid;
+        }
+
+        .alert-danger {
+            background: rgba(255, 0, 0, 0.1);
+            border-left-color: var(--color-sell);
+            color: #ff8888;
+        }
+
+        .alert-warning {
+            background: rgba(255, 170, 0, 0.1);
+            border-left-color: var(--color-hold);
+            color: #ffbb66;
+        }
+
+        /* Emphasis */
+        .highlight {
+            color: var(--color-light);
+            font-weight: 700;
+        }
+
+        .highlight-red { color: #ff6666; }
+        .highlight-amber { color: #ffbb33; }
+        .highlight-green { color: #66ff00; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">HHI</div>
+            <div class="company-info">
+                <div class="company-name">현대중공업</div>
+                <div class="company-meta">009540 | 조선·중공업 | 3가지 심화분석</div>
+            </div>
+            <div class="signal-badge">🔴 SELL</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Summary -->
+        <div class="summary-box">
+            <div class="summary-title">📊 분석 요약</div>
+            <div class="summary-text">
+                <strong>현대중공업은 3가지 독립적 분석 프레임워크(Graham + Buffett + Munger)에서 모두 경고 신호를 발생하고 있습니다.</strong><br><br>
+                • <span class="highlight-red">Graham 방어 실패</span>: NCAV 음수 (-7.0조원), 부채비율 52%, 유동비율 1.27배<br>
+                • <span class="highlight-red">Munger 품질 미달</span>: 프랜차이즈 약함, 4개 항목 중 2개만 충족<br>
+                • <span class="highlight-amber">Buffett 저평가 함정</span>: 해자 부재로 인한 DCF 신뢰도 낮음<br><br>
+                <strong>최종 신호: 🔴 SELL / AVOID at ₩651,000</strong>
+            </div>
+        </div>
+
+        <!-- Three Perspectives -->
+        <div class="perspectives">
+            <!-- Graham -->
+            <div class="perspective-card graham">
+                <div class="perspective-header">
+                    <div class="perspective-icon">🛡️</div>
+                    <div>
+                        <div class="perspective-name">Graham</div>
+                        <div class="perspective-subtitle">절대 안전마진</div>
+                    </div>
+                </div>
+                <div class="score-display" style="color: var(--color-graham);">22</div>
+                <div class="score-label">스코어 / 100</div>
+                <div class="signal-label signal-sell">SELL</div>
+                <div style="font-size: 12px; color: var(--color-gray); margin-top: 1.5rem; line-height: 1.8;">
+                    <strong>NCAV 음수</strong><br>
+                    -7.0조원<br><br>
+                    <strong>부채비율</strong><br>
+                    52% (기준: 30%)<br><br>
+                    <strong>유동비율</strong><br>
+                    1.27배 (기준: 1.5배)
+                </div>
+            </div>
+
+            <!-- Buffett -->
+            <div class="perspective-card buffett">
+                <div class="perspective-header">
+                    <div class="perspective-icon">💰</div>
+                    <div>
+                        <div class="perspective-name">Buffett</div>
+                        <div class="perspective-subtitle">내재가치 & 해자</div>
+                    </div>
+                </div>
+                <div class="score-display" style="color: var(--color-buffett);">38</div>
+                <div class="score-label">스코어 / 100</div>
+                <div class="signal-label signal-hold">HOLD</div>
+                <div style="font-size: 12px; color: var(--color-gray); margin-top: 1.5rem; line-height: 1.8;">
+                    <strong>DCF 내재가치</strong><br>
+                    ₩150,900 (57% 할인)<br><br>
+                    <strong>경제적 해자</strong><br>
+                    9/100 (극히 약함)<br><br>
+                    <strong>판정</strong><br>
+                    저평가 함정
+                </div>
+            </div>
+
+            <!-- Munger -->
+            <div class="perspective-card munger">
+                <div class="perspective-header">
+                    <div class="perspective-icon">🏢</div>
+                    <div>
+                        <div class="perspective-name">Munger</div>
+                        <div class="perspective-subtitle">ROIC & 프랜차이즈</div>
+                    </div>
+                </div>
+                <div class="score-display" style="color: var(--color-munger);">42</div>
+                <div class="score-label">스코어 / 100</div>
+                <div class="signal-label signal-hold">FAIR</div>
+                <div style="font-size: 12px; color: var(--color-gray); margin-top: 1.5rem; line-height: 1.8;">
+                    <strong>프랜차이즈 감사</strong><br>
+                    4개 중 2개만 충족<br><br>
+                    <strong>ROIC 추이</strong><br>
+                    16.3% → 13.8% → 11.1%<br><br>
+                    <strong>판정</strong><br>
+                    사이클 의존
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrated Signal -->
+        <div class="analysis-section">
+            <div class="section-title">📈 3가지 관점 통합 신호</div>
+            <div style="text-align: center; margin: 2rem 0;">
+                <div style="font-size: 48px; font-weight: 700; letter-spacing: 2px; margin-bottom: 1rem;">
+                    <span style="color: var(--color-graham);">22</span> +
+                    <span style="color: var(--color-buffett);">38</span> +
+                    <span style="color: var(--color-munger);">42</span> =
+                </div>
+                <div style="font-size: 64px; font-weight: 700; letter-spacing: 2px; color: var(--color-sell);">
+                    34 / 100
+                </div>
+                <div style="font-size: 14px; color: var(--color-gray); margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px;">
+                    2가지 관점 부정 > 1가지 중립
+                </div>
+            </div>
+            <div class="alert alert-danger">
+                <strong>🔴 최종 신호: SELL / AVOID</strong><br>
+                현재 가격(₩651,000)에서는 어떤 투자자도 추천할 수 없습니다.
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="analysis-section">
+            <div class="section-title">💹 핵심 지표</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">현재 주가</div>
+                    <div class="metric-value">₩651,000</div>
+                    <div class="metric-status status-warn">사이클 최고점</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">PER</div>
+                    <div class="metric-value">14.5배</div>
+                    <div class="metric-status status-warn">저평가처럼 보임</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ROE</div>
+                    <div class="metric-value">16.3%</div>
+                    <div class="metric-status status-warn">호황기 특수</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">부채비율</div>
+                    <div class="metric-value">52%</div>
+                    <div class="metric-status status-fail">기준 초과</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">NCAV</div>
+                    <div class="metric-value">-7.0조원</div>
+                    <div class="metric-status status-fail">음수</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">시가총액</div>
+                    <div class="metric-value">123.0조원</div>
+                    <div class="metric-status status-warn">조정 대기</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis Tabs -->
+        <div class="analysis-section">
+            <div class="section-title">📊 상세 분석</div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(event, 'hook')">Hook 1-4</div>
+                <div class="tab" onclick="switchTab(event, 'scenario')">시나리오</div>
+                <div class="tab" onclick="switchTab(event, 'recommendation')">투자 권고</div>
+            </div>
+
+            <!-- Hook 1-4 -->
+            <div id="hook" class="tab-content active">
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>수치</th>
+                            <th>기준</th>
+                            <th>평가</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hook 1: NCAV</strong></td>
+                            <td>-7.0조원</td>
+                            <td>양수</td>
+                            <td><span class="metric-status status-fail">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hook 1: 부채비율</strong></td>
+                            <td>52%</td>
+                            <td>&lt; 30%</td>
+                            <td><span class="metric-status status-fail">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hook 1: 유동비율</strong></td>
+                            <td>1.27배</td>
+                            <td>&gt; 1.5배</td>
+                            <td><span class="metric-status status-fail">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hook 2/3: ROE 추이</strong></td>
+                            <td>16.3% → 13.8% → 11.1%</td>
+                            <td>증가</td>
+                            <td><span class="metric-status status-warn">WARN</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hook 2/3: ROIC 평균</strong></td>
+                            <td>13.7%</td>
+                            <td>&gt; 20%</td>
+                            <td><span class="metric-status status-warn">WARN</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hook 4: CF / NI</strong></td>
+                            <td>1.95 → 2.06</td>
+                            <td>양호</td>
+                            <td><span class="metric-status status-pass">PASS</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Scenario -->
+            <div id="scenario" class="tab-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                    <div style="background: rgba(0, 204, 0, 0.1); border-left: 4px solid #00cc00; padding: 1.5rem; border-radius: 8px;">
+                        <div style="font-weight: 700; font-size: 14px; text-transform: uppercase; margin-bottom: 0.8rem; color: #66ff00;">
+                            📈 상승 시나리오
+                        </div>
+                        <div style="font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.9);">
+                            <strong>확률: 5%</strong><br>
+                            글로벌 컨테이너 수요 폭증<br>
+                            LNG 메가 오더 확보<br>
+                            NCAV 양수 전환<br><br>
+                            <strong>목표: ₩900,000</strong><br>
+                            <strong>기간: 2-3년</strong>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255, 170, 0, 0.1); border-left: 4px solid #ffaa00; padding: 1.5rem; border-radius: 8px;">
+                        <div style="font-weight: 700; font-size: 14px; text-transform: uppercase; margin-bottom: 0.8rem; color: #ffbb33;">
+                            📊 기준 시나리오
+                        </div>
+                        <div style="font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.9);">
+                            <strong>확률: 60% (가장 그럴듯)</strong><br>
+                            선박 수주 정상화<br>
+                            조선업 사이클 하강<br>
+                            ROIC 8-10%로 악화<br><br>
+                            <strong>목표: ₩350-450K</strong><br>
+                            <strong>기간: 2-3년</strong>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255, 0, 0, 0.1); border-left: 4px solid #ff0000; padding: 1.5rem; border-radius: 8px;">
+                        <div style="font-weight: 700; font-size: 14px; text-transform: uppercase; margin-bottom: 0.8rem; color: #ff6666;">
+                            📉 약세 시나리오
+                        </div>
+                        <div style="font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.9);">
+                            <strong>확률: 35%</strong><br>
+                            글로벌 경기 침체<br>
+                            해운 시장 붕괴<br>
+                            부채 조약 위반<br><br>
+                            <strong>목표: ₩150-250K</strong><br>
+                            <strong>기간: 3-5년</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div id="recommendation" class="tab-content">
+                <div class="alert alert-danger">
+                    <strong>현재 가격에서의 판단: 🔴 SELL / AVOID</strong>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <div style="font-weight: 700; margin-bottom: 1rem; font-size: 14px; text-transform: uppercase;">✅ 고려할 수 있는 경우</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0;">• <strong>₩300,000 이하</strong> 진입 시 (54% 하락)</li>
+                        <li style="padding: 0.5rem 0;">• <strong>3-5년</strong> 사이클 베팅 명시</li>
+                        <li style="padding: 0.5rem 0;">• <strong>포트폴리오 5% 이하</strong> 배분</li>
+                        <li style="padding: 0.5rem 0;">• <strong>헤징</strong> (콜옵션 숏, 선물)</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 8px; padding: 1.5rem;">
+                    <div style="font-weight: 700; margin-bottom: 1rem; font-size: 14px; text-transform: uppercase;">❌ 피해야 하는 경우</div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0;">• 보수적 투자자 (안전성 중심)</li>
+                        <li style="padding: 0.5rem 0;">• 단기 자금 필요 (2년 이내)</li>
+                        <li style="padding: 0.5rem 0;">• 부채 비중 높은 포트폴리오</li>
+                        <li style="padding: 0.5rem 0;">• 경기 침체 우려 투자자</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Factors -->
+        <div class="analysis-section">
+            <div class="section-title">⚠️ 위험요소</div>
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>위험</th>
+                        <th>확률</th>
+                        <th>영향도</th>
+                        <th>시점</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>선박 신규 수주 급감</strong></td>
+                        <td><span class="metric-status status-fail">HIGH</span></td>
+                        <td>-40% 매출</td>
+                        <td>2-3년</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NCAV 악화 (음수 심화)</strong></td>
+                        <td><span class="metric-status status-fail">HIGH</span></td>
+                        <td>부채 위기</td>
+                        <td>동시</td>
+                    </tr>
+                    <tr>
+                        <td><strong>부채 조약 위반</strong></td>
+                        <td><span class="metric-status status-warn">MEDIUM</span></td>
+                        <td>리파이냐싱</td>
+                        <td>불황기</td>
+                    </tr>
+                    <tr>
+                        <td><strong>시장점유율 손실</strong></td>
+                        <td><span class="metric-status status-warn">MEDIUM</span></td>
+                        <td>구조적 쇠락</td>
+                        <td>5년+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Final Verdict -->
+        <div class="analysis-section" style="background: rgba(255, 0, 0, 0.08); border: 2px solid var(--color-sell);">
+            <div class="section-title" style="color: var(--color-sell);">🔴 최종 판정</div>
+            <div style="font-size: 16px; line-height: 2; color: rgba(255, 255, 255, 0.95);">
+                <p><strong>현대중공업은 조선업 사이클의 정점 근처에 위치하며,</strong></p>
+                <p><strong>구조적으로 약한 프랜차이즈와 취약한 재무 상태를 보유하고 있습니다.</strong></p>
+                <br>
+                <p>Graham, Buffett, Munger 모두</p>
+                <p>현 가격에서의 투자를 권고하지 않습니다.</p>
+                <br>
+                <div style="font-size: 32px; font-weight: 700; letter-spacing: 2px; color: var(--color-sell); margin: 1.5rem 0;">
+                    SELL / AVOID ✋
+                </div>
+                <p style="color: var(--color-gray); font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+                    at ₩651,000
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">
+            📊 현대중공업 (009540) 3가지 심화분석 대시보드<br>
+            분석일시: 2026년 6월 11일 | 방법론: Graham + Buffett + Munger | 신뢰도: HIGH
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Add scroll animation
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.perspective-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
