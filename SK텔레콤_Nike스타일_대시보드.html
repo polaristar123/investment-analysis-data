@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SK 텔레콤 (017670) — 투자 분석</title>
+    <style>
+        /* Nike Design System - 검은색/흰색 중심 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --ink: #111111;
+            --canvas: #ffffff;
+            --soft-cloud: #f5f5f5;
+            --hairline: #cacacb;
+            --hairline-soft: #e5e5e5;
+            --charcoal: #39393b;
+            --ash: #4b4b4d;
+            --mute: #707072;
+            --stone: #9e9ea0;
+            --sale: #d30005;
+            --success: #007d48;
+
+            /* Spacing (8px base) */
+            --xs: 4px;
+            --sm: 8px;
+            --md: 12px;
+            --lg: 18px;
+            --xl: 24px;
+            --xxl: 30px;
+            --section: 48px;
+
+            /* Typography */
+            --font-display: 'Bebas Neue', 'Futura', sans-serif;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--canvas);
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        /* Utility Bar */
+        .utility-bar {
+            background: var(--soft-cloud);
+            padding: calc(var(--sm) * 2.25) var(--xl);
+            text-align: right;
+            font-size: 12px;
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        /* Header */
+        header {
+            background: var(--canvas);
+            padding: var(--lg) var(--xl);
+            border-bottom: 1px solid var(--hairline);
+            margin-bottom: var(--section);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--md);
+            letter-spacing: -1px;
+        }
+
+        .company-meta {
+            font-size: 14px;
+            color: var(--mute);
+        }
+
+        /* Campaign Hero */
+        .campaign-hero {
+            background: linear-gradient(135deg, var(--ink) 0%, #1a1a1a 100%);
+            color: var(--canvas);
+            padding: var(--section);
+            text-align: center;
+            margin-bottom: var(--section);
+        }
+
+        .campaign-headline {
+            font-family: var(--font-display);
+            font-size: 96px;
+            font-weight: 500;
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: var(--xl);
+        }
+
+        .campaign-subtitle {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: var(--xl);
+        }
+
+        .campaign-signal {
+            display: inline-block;
+            background: var(--canvas);
+            color: var(--sale);
+            padding: var(--lg) var(--xxl);
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 var(--xl);
+        }
+
+        /* Section */
+        section {
+            margin-bottom: var(--section);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin-bottom: var(--xl);
+            padding-bottom: var(--lg);
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--sm);
+            margin-bottom: var(--section);
+        }
+
+        .grid.col-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid.col-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Card */
+        .card {
+            background: var(--soft-cloud);
+            border-radius: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--canvas);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--hairline);
+            margin-bottom: 0;
+        }
+
+        .card-metric {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .card-body {
+            padding: var(--lg);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: var(--xs);
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--mute);
+            margin-bottom: var(--md);
+        }
+
+        .card-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .card-price.sale {
+            color: var(--sale);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: var(--xs) var(--md);
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: var(--sm);
+        }
+
+        .status-good {
+            background: var(--canvas);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-warn {
+            background: var(--canvas);
+            color: var(--mute);
+            border: 1px solid var(--mute);
+        }
+
+        .status-bad {
+            background: var(--canvas);
+            color: var(--sale);
+            border: 1px solid var(--sale);
+        }
+
+        /* Button */
+        .btn {
+            display: inline-block;
+            background: var(--ink);
+            color: var(--canvas);
+            padding: var(--lg) var(--xxl);
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-ui);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.5);
+            opacity: 0.5;
+        }
+
+        .btn-secondary {
+            background: var(--soft-cloud);
+            color: var(--ink);
+            border: 1px solid var(--hairline);
+        }
+
+        /* Analysis Grid */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--section);
+            margin-bottom: var(--section);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--canvas);
+            border-top: 1px solid var(--hairline);
+            padding: var(--section) var(--xl);
+            margin-top: var(--section);
+        }
+
+        .footer-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--xxl);
+            margin-bottom: var(--xl);
+            padding-bottom: var(--xl);
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        .footer-col-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: var(--lg);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-link {
+            display: block;
+            font-size: 12px;
+            color: var(--mute);
+            margin-bottom: var(--md);
+            text-decoration: none;
+        }
+
+        .footer-legal {
+            max-width: 1440px;
+            margin: 0 auto;
+            font-size: 9px;
+            color: var(--mute);
+            line-height: 1.75;
+        }
+
+        /* Responsive */
+        @media (max-width: 1023px) {
+            .grid.col-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 599px) {
+            .campaign-headline {
+                font-size: 48px;
+            }
+            .grid, .grid.col-3, .grid.col-2 {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Utility Bar -->
+    <div class="utility-bar">
+        FIND A STORE · HELP · SIGN IN
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">SK</div>
+            <div class="company-meta">SK TELECOM · 017670 · 2024 FINANCIAL ANALYSIS</div>
+        </div>
+    </header>
+
+    <!-- Campaign Hero -->
+    <div class="campaign-hero">
+        <div style="max-width: 1440px; margin: 0 auto;">
+            <div class="campaign-headline">
+                TELECOM STRENGTH
+            </div>
+            <div class="campaign-subtitle">
+                A Deep Financial Audit
+            </div>
+            <div class="campaign-signal">
+                ANALYSIS READY
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Summary Section -->
+        <section>
+            <h2 class="section-title">FINANCIAL SNAPSHOT</h2>
+            <div class="grid col-3">
+                <div class="card">
+                    <div class="card-image">
+                        <div class="card-metric">4.5T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">2024 REVENUE</div>
+                        <div class="card-subtitle">年間売上</div>
+                        <div class="card-price">KRW 4.5 Trillion</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        <div class="card-metric">0.4T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">NET INCOME</div>
+                        <div class="card-subtitle">順利益</div>
+                        <div class="card-price">KRW 0.4 Trillion</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        <div class="card-metric">46.4T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">TOTAL ASSETS</div>
+                        <div class="card-subtitle">総資産</div>
+                        <div class="card-price">KRW 46.4 Trillion</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hook Analysis Section -->
+        <section>
+            <h2 class="section-title">HOOK 1-4 ANALYSIS</h2>
+
+            <div class="analysis-grid">
+                <!-- Hook 1 -->
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 32px; font-weight: 500; text-align: center;">
+                            DEFENSE<br/>AUDIT
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">GRAHAM ANALYSIS</div>
+                        <div class="card-subtitle">Hook 1: Margin of Safety</div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">NCAV (淨流動資産)</div>
+                            <div class="card-price sale">-8.4T KRW</div>
+                            <span class="status-badge status-bad">FAIL</span>
+                        </div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">Debt Ratio</div>
+                            <div class="card-price">46.1%</div>
+                            <span class="status-badge status-warn">CAUTION</span>
+                        </div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">Current Ratio</div>
+                            <div class="card-price">1.51x</div>
+                            <span class="status-badge status-good">PASS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hook 2/3 -->
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 32px; font-weight: 500; text-align: center;">
+                            EARNINGS<br/>POWER
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">BUFFETT & MUNGER</div>
+                        <div class="card-subtitle">Hook 2/3: Return on Equity</div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">ROE (資本利益率)</div>
+                            <div class="card-price sale">1.6%</div>
+                            <span class="status-badge status-bad">WEAK</span>
+                        </div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">Cash Flow Quality</div>
+                            <div class="card-price">2.50x</div>
+                            <span class="status-badge status-good">STRONG</span>
+                        </div>
+
+                        <div style="margin: var(--md) 0;">
+                            <div style="font-size: 12px; color: var(--mute); text-transform: uppercase; margin-bottom: var(--xs);">Operating CF</div>
+                            <div class="card-price">1.0T KRW</div>
+                            <span class="status-badge status-good">STABLE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics Grid -->
+        <section>
+            <h2 class="section-title">2024 KEY METRICS</h2>
+            <div class="grid col-2">
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 48px; font-weight: 500;">13.0T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">CURRENT ASSETS</div>
+                        <div class="card-subtitle">流動資産</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 48px; font-weight: 500;">21.4T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">TOTAL DEBT</div>
+                        <div class="card-subtitle">総債務</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 48px; font-weight: 500;">25.0T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">NET EQUITY</div>
+                        <div class="card-subtitle">淨資産</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image">
+                        <div style="font-family: var(--font-display); font-size: 48px; font-weight: 500;">0.4T</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">CAPITAL EXPENDITURE</div>
+                        <div class="card-subtitle">設備投資</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section style="text-align: center; padding: var(--section) 0;">
+            <p style="font-size: 24px; font-weight: 500; margin-bottom: var(--xl); text-transform: uppercase; letter-spacing: -0.5px;">
+                READY FOR DEEP ANALYSIS?
+            </p>
+            <button class="btn" style="margin-right: var(--md);">VIEW FULL REPORT</button>
+            <button class="btn btn-secondary">DOWNLOAD PDF</button>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-col-title">COMPANY</div>
+                <a href="#" class="footer-link">About SK Telecom</a>
+                <a href="#" class="footer-link">Investor Relations</a>
+                <a href="#" class="footer-link">News & Media</a>
+            </div>
+            <div>
+                <div class="footer-col-title">ANALYSIS</div>
+                <a href="#" class="footer-link">Financial Data</a>
+                <a href="#" class="footer-link">Methodology</a>
+                <a href="#" class="footer-link">Disclaimers</a>
+            </div>
+            <div>
+                <div class="footer-col-title">RESEARCH</div>
+                <a href="#" class="footer-link">Reports Archive</a>
+                <a href="#" class="footer-link">Market Insights</a>
+                <a href="#" class="footer-link">Economic Calendar</a>
+            </div>
+            <div>
+                <div class="footer-col-title">RESOURCES</div>
+                <a href="#" class="footer-link">Contact Support</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div class="footer-legal">
+            © 2024 INVESTMENT ANALYSIS SYSTEM. ALL DATA SOURCED FROM DART (KOREAN EXCHANGE).
+            THIS ANALYSIS IS FOR INFORMATIONAL PURPOSES ONLY AND DOES NOT CONSTITUTE INVESTMENT ADVICE.
+            PAST PERFORMANCE IS NOT INDICATIVE OF FUTURE RESULTS. PLEASE CONSULT A LICENSED FINANCIAL ADVISOR BEFORE MAKING INVESTMENT DECISIONS.
+        </div>
+    </footer>
+</body>
+</html>
