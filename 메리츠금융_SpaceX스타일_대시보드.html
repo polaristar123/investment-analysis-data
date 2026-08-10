@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERIITZ — 3가지 심화분석</title>
+    <style>
+        /* SpaceX Design System */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --canvas-night: #000000;
+            --canvas-night-soft: #0a0a0a;
+            --on-primary: #ffffff;
+            --on-primary-mute: #f0f0fa;
+            --hairline-dark: #3a3a3f;
+            --ink-mute: #5a5a5f;
+
+            --font-display: "D-DIN-Bold", "Arial Narrow", Arial, sans-serif;
+            --font-body: "D-DIN", Arial, sans-serif;
+
+            --spacing-xxs: 4px;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 18px;
+            --spacing-xl: 24px;
+            --spacing-xxl: 32px;
+            --spacing-huge: 48px;
+        }
+
+        html, body {
+            background: var(--canvas-night);
+            color: var(--on-primary);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Fixed Nav Overlay */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: transparent;
+            z-index: 999;
+            padding: var(--spacing-xl) var(--spacing-xxl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-xl);
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.96px;
+            text-transform: uppercase;
+            color: var(--on-primary);
+            text-decoration: none;
+        }
+
+        /* Full-Bleed Hero Band */
+        .hero-band {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #001a66 0%, #003399 40%, #004dcc 70%, #0066ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: var(--spacing-huge);
+        }
+
+        .hero-band::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 15% 25%, rgba(0, 150, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(0, 100, 200, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(0, 200, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 var(--spacing-xl);
+        }
+
+        .hero-headline {
+            font-family: var(--font-display);
+            font-size: 80px;
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-xl);
+            color: var(--on-primary);
+        }
+
+        .hero-subheadline {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: 0.96px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-huge);
+            color: var(--on-primary-mute);
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid var(--on-primary);
+            color: var(--on-primary);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-radius: 32px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.17px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .hero-cta:hover {
+            background: var(--on-primary);
+            color: var(--canvas-night);
+        }
+
+        /* Content Band */
+        .content-band {
+            background: var(--canvas-night);
+            padding: var(--spacing-huge) var(--spacing-xl);
+            width: 100%;
+        }
+
+        .content-band-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-headline {
+            font-family: var(--font-display);
+            font-size: 60px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-huge);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--hairline-dark);
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-huge);
+        }
+
+        .analysis-card {
+            background: var(--canvas-night-soft);
+            border: 1px solid var(--hairline-dark);
+            padding: var(--spacing-xl);
+            border-radius: 4px;
+        }
+
+        .analysis-card-title {
+            font-family: var(--font-display);
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 0.96px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-lg);
+            color: var(--on-primary);
+        }
+
+        .analysis-card-meta {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.96px;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .score-box {
+            background: var(--canvas-night);
+            border: 1px solid var(--hairline-dark);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border-radius: 4px;
+        }
+
+        .score-number {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 0.96px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .score-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.17px;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+        }
+
+        .score-signal {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.17px;
+            text-transform: uppercase;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--canvas-night);
+            border: 1px solid var(--hairline-dark);
+            border-radius: 32px;
+            display: inline-block;
+            margin-top: var(--spacing-sm);
+        }
+
+        .signal-strong-buy { color: #00ff00; border-color: #00ff00; }
+        .signal-excellent { color: #00dd00; border-color: #00dd00; }
+        .signal-buy { color: #00aa00; border-color: #00aa00; }
+        .signal-hold { color: #ffaa00; border-color: #ffaa00; }
+        .signal-sell { color: #ff4444; border-color: #ff4444; }
+
+        .analysis-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .analysis-list li {
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: var(--spacing-sm);
+            padding-left: var(--spacing-md);
+            position: relative;
+        }
+
+        .analysis-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--ink-mute);
+        }
+
+        /* Final Verdict Band */
+        .verdict-band {
+            background: var(--canvas-night-soft);
+            padding: var(--spacing-huge) var(--spacing-xl);
+            border-top: 1px solid var(--hairline-dark);
+            border-bottom: 1px solid var(--hairline-dark);
+            margin: var(--spacing-huge) 0;
+        }
+
+        .verdict-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .verdict-headline {
+            font-family: var(--font-display);
+            font-size: 60px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .verdict-box {
+            background: var(--canvas-night);
+            border: 1px solid var(--hairline-dark);
+            padding: var(--spacing-xl);
+            border-radius: 4px;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .verdict-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--hairline-dark);
+        }
+
+        .verdict-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .verdict-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.17px;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+        }
+
+        .verdict-value {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.96px;
+        }
+
+        .verdict-message {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--canvas-night);
+            border-top: 1px solid var(--hairline-dark);
+            padding: var(--spacing-xxl) var(--spacing-xl);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--hairline-dark);
+        }
+
+        .footer-section h4 {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.96px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-link {
+            display: block;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--on-primary);
+            text-decoration: none;
+        }
+
+        .footer-legal {
+            font-size: 12px;
+            color: var(--ink-mute);
+            line-height: 1.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-headline {
+                font-size: 60px;
+            }
+
+            .section-headline {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+
+            .hero-headline {
+                font-size: 48px;
+            }
+
+            .hero-subheadline {
+                font-size: 32px;
+            }
+
+            .hero-band {
+                height: 60vh;
+            }
+
+            .section-headline {
+                font-size: 36px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-headline {
+                font-size: 40px;
+            }
+
+            .hero-subheadline {
+                font-size: 24px;
+            }
+
+            .section-headline {
+                font-size: 28px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Navigation Overlay -->
+    <nav>
+        <div class="nav-logo">MERIITZ FINANCIAL</div>
+        <ul class="nav-links">
+            <li><a href="#analysis">분석</a></li>
+            <li><a href="#verdict">판정</a></li>
+            <li><a href="#info">정보</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Band -->
+    <div class="hero-band">
+        <div class="hero-content">
+            <div class="hero-headline">MERIITZ</div>
+            <div class="hero-subheadline">3가지 심화분석</div>
+            <a href="#analysis" class="hero-cta">분석 보기</a>
+        </div>
+    </div>
+
+    <!-- Analysis Band -->
+    <div class="content-band" id="analysis">
+        <div class="content-band-inner">
+            <h1 class="section-headline">3가지 관점 분석</h1>
+
+            <div class="analysis-grid">
+                <!-- Buffett Score -->
+                <div class="analysis-card">
+                    <h2 class="analysis-card-title">BUFFETT</h2>
+                    <p class="analysis-card-meta">DCF + 경제적 해자</p>
+
+                    <div class="score-box">
+                        <div class="score-number">85</div>
+                        <div class="score-label">점수</div>
+                        <span class="score-signal signal-strong-buy">STRONG BUY</span>
+                    </div>
+
+                    <ul class="analysis-list">
+                        <li>내재가치: 67.5조원 (현재 26.5%)</li>
+                        <li>안전마진: 73.5% ✅</li>
+                        <li>해자: 매우 강함 (규제+신뢰)</li>
+                        <li>연간 순이익: 2.7조원</li>
+                    </ul>
+                </div>
+
+                <!-- Munger Score -->
+                <div class="analysis-card">
+                    <h2 class="analysis-card-title">MUNGER</h2>
+                    <p class="analysis-card-meta">ROIC + 프랜차이즈 감사</p>
+
+                    <div class="score-box">
+                        <div class="score-number">88</div>
+                        <div class="score-label">점수</div>
+                        <span class="score-signal signal-excellent">EXCELLENT</span>
+                    </div>
+
+                    <ul class="analysis-list">
+                        <li>ROE: 25.4% (기준 초과)</li>
+                        <li>장기 복리: 20%+ 기대 ✅</li>
+                        <li>프랜차이즈: 92/100</li>
+                        <li>경쟁 배제: 매우 강함</li>
+                    </ul>
+                </div>
+
+                <!-- Graham Score -->
+                <div class="analysis-card">
+                    <h2 class="analysis-card-title">GRAHAM</h2>
+                    <p class="analysis-card-meta">NCAV + 안전마진</p>
+
+                    <div class="score-box">
+                        <div class="score-number">35</div>
+                        <div class="score-label">점수</div>
+                        <span class="score-signal signal-sell">OVERVALUED</span>
+                    </div>
+
+                    <ul class="analysis-list">
+                        <li>NCAV: -60.2조원 ❌</li>
+                        <li>부채비율: 66.6% (높음)</li>
+                        <li>PBR: 9.4배 (비쌈)</li>
+                        <li>유동비율: 1.28배 ⚠️</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verdict Band -->
+    <div class="verdict-band" id="verdict">
+        <div class="verdict-inner">
+            <h1 class="verdict-headline">종합 판정</h1>
+
+            <div class="verdict-box">
+                <div class="verdict-row">
+                    <span class="verdict-label">Buffett Score</span>
+                    <span class="verdict-value">85/100</span>
+                </div>
+                <div class="verdict-row">
+                    <span class="verdict-label">Munger Score</span>
+                    <span class="verdict-value">88/100</span>
+                </div>
+                <div class="verdict-row">
+                    <span class="verdict-label">Graham Score</span>
+                    <span class="verdict-value">35/100</span>
+                </div>
+                <div class="verdict-row">
+                    <span class="verdict-label">종합 스코어</span>
+                    <span class="verdict-value" style="color: #00dd00;">69/100</span>
+                </div>
+            </div>
+
+            <div class="verdict-box">
+                <h3 style="font-size: 18px; margin-bottom: var(--spacing-lg); text-transform: uppercase; letter-spacing: 1.17px;">최종 신호: BUY</h3>
+
+                <p class="verdict-message">
+                    메리츠 금융은 <strong>극도로 저평가된 우수 기업</strong>입니다.
+                    Buffett과 Munger의 관점에서는 "강력한 매수 신호"이나,
+                    Graham의 보수적 관점에서는 부채와 무형자산 위험이 있습니다.
+                </p>
+
+                <div style="background: var(--canvas-night-soft); border-left: 3px solid var(--on-primary-mute); padding: var(--spacing-lg); margin: var(--spacing-lg) 0;">
+                    <p style="font-size: 13px; line-height: 1.8; color: var(--on-primary-mute);">
+                        <strong>Buffett:</strong> 내재가치 대비 73.5% 저평가 + 규제 독점<br/>
+                        <strong>Munger:</strong> ROE 25.4% + 장기 복리 20%+ 기대<br/>
+                        <strong>Graham:</strong> NCAV 음수 + 부채 비율 높음 (보험사 특성)
+                    </p>
+                </div>
+
+                <p class="verdict-message">
+                    <strong>목표가 추정:</strong> 180,000원 (상승 잠재력 67%)<br/>
+                    <strong>추천 투자자:</strong> 금융업 구조 이해하는 장기 투자자<br/>
+                    <strong>회피:</strong> 절대 안전성 중시자 (신중)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Band -->
+    <div class="content-band" id="info">
+        <div class="content-band-inner">
+            <h1 class="section-headline">주요 지표</h1>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-xl); margin-bottom: var(--spacing-huge);">
+                <div style="background: var(--canvas-night-soft); border: 1px solid var(--hairline-dark); padding: var(--spacing-xl); border-radius: 4px;">
+                    <div style="font-size: 12px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.96px; margin-bottom: var(--spacing-sm);">현재 주가</div>
+                    <div style="font-family: var(--font-display); font-size: 32px; font-weight: 700;">107,800</div>
+                    <div style="font-size: 12px; color: var(--ink-mute);">원</div>
+                </div>
+
+                <div style="background: var(--canvas-night-soft); border: 1px solid var(--hairline-dark); padding: var(--spacing-xl); border-radius: 4px;">
+                    <div style="font-size: 12px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.96px; margin-bottom: var(--spacing-sm);">시가총액</div>
+                    <div style="font-family: var(--font-display); font-size: 32px; font-weight: 700;">17.9</div>
+                    <div style="font-size: 12px; color: var(--ink-mute);">조원</div>
+                </div>
+
+                <div style="background: var(--canvas-night-soft); border: 1px solid var(--hairline-dark); padding: var(--spacing-xl); border-radius: 4px;">
+                    <div style="font-size: 12px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.96px; margin-bottom: var(--spacing-sm);">ROE</div>
+                    <div style="font-family: var(--font-display); font-size: 32px; font-weight: 700;">25.4</div>
+                    <div style="font-size: 12px; color: var(--ink-mute);">%</div>
+                </div>
+
+                <div style="background: var(--canvas-night-soft); border: 1px solid var(--hairline-dark); padding: var(--spacing-xl); border-radius: 4px;">
+                    <div style="font-size: 12px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.96px; margin-bottom: var(--spacing-sm);">PBR</div>
+                    <div style="font-family: var(--font-display); font-size: 32px; font-weight: 700;">9.4</div>
+                    <div style="font-size: 12px; color: var(--ink-mute);">배</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ANALYSIS</h4>
+                <a href="#" class="footer-link">분석 방법론</a>
+                <a href="#" class="footer-link">3가지 관점</a>
+                <a href="#" class="footer-link">투자 신호</a>
+            </div>
+            <div class="footer-section">
+                <h4>COMPANY</h4>
+                <a href="#" class="footer-link">메리츠 소개</a>
+                <a href="#" class="footer-link">재무 공시</a>
+                <a href="#" class="footer-link">투자자 관계</a>
+            </div>
+            <div class="footer-section">
+                <h4>RESOURCES</h4>
+                <a href="#" class="footer-link">용어 사전</a>
+                <a href="#" class="footer-link">자료 다운로드</a>
+                <a href="#" class="footer-link">연락처</a>
+            </div>
+            <div class="footer-section">
+                <h4>LEGAL</h4>
+                <a href="#" class="footer-link">개인정보처리방침</a>
+                <a href="#" class="footer-link">이용약관</a>
+                <a href="#" class="footer-link">면책조항</a>
+            </div>
+        </div>
+
+        <div class="footer-legal">
+            © 2026 INVESTMENT ANALYSIS SYSTEM. 이 분석은 2026년 2분기 공시 데이터 기반입니다.
+            보험사 특성: 금리 변화, 투자 수익, 재해 손실에 민감합니다. 규제 리스크 주의.
+            과거 데이터 기반이므로 미래 수익을 보장하지 않습니다. 최종 투자 결정은 사용자의 책임입니다.
+        </div>
+    </footer>
+</body>
+</html>
